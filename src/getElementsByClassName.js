@@ -5,12 +5,6 @@
 
 // But instead we're going to implement it from scratch:
 
-//  NODE TREE https://dom.spec.whatwg.org/#concept-node
-
-//document is at the root
-
-
-
 var getElementsByClassName = function(className) {
 	//an array to store the elements that do contain the class name
 	var elementArray = [];
@@ -23,23 +17,18 @@ var getElementsByClassName = function(className) {
 	}
   	
   	//a recursive function to walk the dom
-  	function walkTheDOM(node) {
-  		//check to see if the node has the target class Name
-  		hasClassName(node);
-  		//check its child
-  		node = node.firstChild;
-  		//if there is no 
-  		while (node) {
-  			walkTheDOM(node);
-  			node = node.nextSibling;
+  	function walkTheDOM(node, func) {
+  		//call the passed in function on the inital node
+  		func(node);
+  		//loop through each of its children, calling this function recursively on each child, and all of its children
+  		for (node = node.firstChild; node !== null; node = node.nextSibling) {
+  			walkTheDOM(node, func);
   		}
+  		
   	}
 
-  	walkTheDOM(document.body);
-	
-  //the return output is usually a nodelist but this is expecting the output to be an array
-  //the array looks like this:  [body.targetClassName, div.targetClassName]
-   //console.log(elementArray);
-   return elementArray;
+  	walkTheDOM(document.body, hasClassName);
+
+	return elementArray;
 
 };
