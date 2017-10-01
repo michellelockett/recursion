@@ -1,13 +1,9 @@
 // this is what you would do if you liked things to be easy:
 // var stringifyJSON = JSON.stringify;
 
-// but you don't so you're going to write it from scratch:
-
-//https://stackoverflow.com/questions/22333101/recursive-json-stringify-implementation
 
 var stringifyJSON = function(obj) {
 	var type = typeof obj;
-	console.log(type);
 	//helper function to stringify arrays
 	var stringifyArray = function() {
 		if (obj.length === 0) {
