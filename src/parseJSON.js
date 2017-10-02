@@ -39,7 +39,6 @@ function parseJSON(input) {
 		var returned = false;
 
 		var getPair = function() {
-
 			var key = string();
 			//console.log('this call of next is inside the getPair funciton');
 			while (char !== ":") {
@@ -47,13 +46,12 @@ function parseJSON(input) {
 			}
 			//skip the colon
 			next();
-			//console.log('the key is now ', key);
 			//skip white space
 			while (char === " ") {
 				next();
 			}
 			object[key] = value();
-			//console.log('added a pair to the object.  object is now ', object);
+			console.log('after getting a pair, the char is now ', char);
 	  }
 		//check for an empty object
 		if (char === '}') {
@@ -62,17 +60,15 @@ function parseJSON(input) {
 			return object;
 		} else {
 			while (!returned && index < input.length) {
-				//get the first pair
+				//get the first pair, skipping any white space
+				while (char === ' ') {next();}
 				getPair();
+				while (char === ' ' || char === ',') {next();}
 				if (char === '}') {
 					returned = true;
 					console.log('exiting the object function ', object);
 					next();
 					return object;
-				}
-				while (char === ' ' || char === ',') {
-				
-					next();
 				}
 			}
 		}	
@@ -104,7 +100,7 @@ function parseJSON(input) {
 				//next();
 				console.log('we pushed a value into the array, the array is now,', returnArr);
 				//if there are more values in the array, get them
-				if (char === ','){
+				if (char === ',' || char === ' '){
 				  next();
 				}
 				//console.log('the array is now', returnArr, 'and the character is now ', char);
@@ -168,10 +164,11 @@ function parseJSON(input) {
 		console.log("we called the string function", char);
 		var charStr = "";
 
-		//going to return a string that skips escape characters
+		//going to return a string that deals with escape characters
 		//skip the inital quotation mark
 		next();
 		while (char) {
+			//if we hit another " we are now at the end of a string
 			if (char === "\"") {
 
 				console.log('exiting the string function');
@@ -220,34 +217,10 @@ function parseJSON(input) {
 	return value();
 }
 
+var test = '\t"hello"';
 
-
-var tests = ['{\r\n' +
-    '          "glossary": {\n' +
-    '              "title": "example glossary",\n\r' +
-    '      \t\t"GlossDiv": {\r\n' +
-    '                  "title": "S",\r\n' +
-    '      \t\t\t"GlossList": {\r\n' +
-    '                      "GlossEntry": {\r\n' +
-    '                          "ID": "SGML",\r\n' +
-    '      \t\t\t\t\t"SortAs": "SGML",\r\n' +
-    '      \t\t\t\t\t"GlossTerm": "Standard Generalized ' +
-    'Markup Language",\r\n' +
-    '      \t\t\t\t\t"Acronym": "SGML",\r\n' +
-    '      \t\t\t\t\t"Abbrev": "ISO 8879:1986",\r\n' +
-    '      \t\t\t\t\t"GlossDef": {\r\n' +
-    '                              "para": "A meta-markup language,' +
-    ' used to create markup languages such as DocBook.",\r\n' +
-    '      \t\t\t\t\t\t"GlossSeeAlso": ["GML", "XML"]\r\n' +
-    '                          },\r\n' +
-    '      \t\t\t\t\t"GlossSee": "markup"\r\n' +
-    '                      }\r\n' +
-    '                  }\r\n' +
-    '              }\r\n' +
-    '          }\r\n' +
-    '      }\r\n'];
-  /*  
-  '{\r\n' +
+/*
+'{\r\n' +
     '          "glossary": {\n' +
     '              "title": "example glossary",\n\r' +
     '      \t\t"GlossDiv": {\r\n' +
@@ -271,9 +244,9 @@ var tests = ['{\r\n' +
     '              }\r\n' +
     '          }\r\n' +
     '      }\r\n'
-]
-
 */
+console.log(parseJSON(test.replace(/ /g,'')));
+
 
 
 
